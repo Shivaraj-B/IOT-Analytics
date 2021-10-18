@@ -11,7 +11,6 @@ public final class KafkaProducerService {
     private static final Logger logger = LoggerFactory.getLogger(KafkaProducerService.class);
 
     private final KafkaTemplate<String, SensorEvent> kafkaTemplate;
-    //@Value("kafka.topic")
     private final String TOPIC= "iot-data";
 
     public KafkaProducerService(KafkaTemplate<String, SensorEvent> kafkaTemplate) {
@@ -20,7 +19,6 @@ public final class KafkaProducerService {
 
     public void sendMessage(SensorEvent message) {
         logger.info(String.format("$$$$ => Producing generic message: %s", message));
-
         this.kafkaTemplate.send(TOPIC, message);
 
     }
