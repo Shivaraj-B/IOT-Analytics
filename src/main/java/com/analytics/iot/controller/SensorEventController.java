@@ -20,11 +20,9 @@ public final class SensorEventController {
     private final SensorEventService sensorEventService;
     private static final Logger logger = LoggerFactory.getLogger(SensorEventController.class);
 
-
     public SensorEventController(SensorEventService sensorEventService) {
         this.sensorEventService = sensorEventService;
     }
-
 
     @GetMapping(value = "/{id}/average")
     public ResponseEntity<?> getSensorAverageData(@PathVariable("id") long id) {

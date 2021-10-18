@@ -1,7 +1,6 @@
 package com.analytics.iot.config;
 
 import com.analytics.iot.model.SensorEvent;
-import com.analytics.iot.service.KafkaProducerService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.apache.kafka.common.errors.SerializationException;
@@ -32,7 +31,6 @@ public class CustomSerializer implements Serializer<SensorEvent> {
             logger.info("Serializing...");
             return objectMapper.writeValueAsBytes(data);
         } catch (Exception e) {
-            logger.error("stack trace:" + e);
             throw new SerializationException("Error when serializing SensorEvent to byte[]");
         }
     }

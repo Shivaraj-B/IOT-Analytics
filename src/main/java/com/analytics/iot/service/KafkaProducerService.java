@@ -18,7 +18,7 @@ public final class KafkaProducerService {
     }
 
     public void sendMessage(SensorEvent message) {
-        logger.info(String.format("$$$$ => Producing generic message: %s", message));
+        logger.info(String.format("Producing generic message: %s", message));
         this.kafkaTemplate.send(TOPIC, message);
 
     }

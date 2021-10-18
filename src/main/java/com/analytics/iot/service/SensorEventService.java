@@ -23,26 +23,25 @@ public  class SensorEventService {
 
     public BigDecimal getAverageDataForSensor(long id) {
         if(CollectionUtils.isEmpty(repo.findBySensorId(id))) {
+            logger.warn("No sensor data found for id: "+id);
             return  null;
         }
         List<BigDecimal> listOfSensorValues = getSensorValues(id);
         return SensorEventUtils.getAverageValue(listOfSensorValues);
     }
 
-
-
     public BigDecimal getMedianDataForSensor(long id) {
         if(CollectionUtils.isEmpty(repo.findBySensorId(id))) {
+            logger.warn("No sensor data found for id: "+id);
             return  null;
         }
         List<BigDecimal> listOfSensorValues = getSensorValues(id);
-
         return SensorEventUtils.getMedianValue(listOfSensorValues);
     }
 
-
     public BigDecimal getMinDataForSensor(long id) {
         if(CollectionUtils.isEmpty(repo.findBySensorId(id))) {
+            logger.warn("No sensor data found for id: "+id);
             return  null;
         }
 
@@ -54,15 +53,11 @@ public  class SensorEventService {
     }
 
     public BigDecimal getMaxDataForSensor(long id) {
-        /*if(CollectionUtils.isEmpty(repo.findAllById(Arrays.asList(id)))) {
-            return  null;
-        }*/
-
         if(CollectionUtils.isEmpty(repo.findBySensorId(id))) {
+            logger.warn("No sensor data found for id: "+id);
             return  null;
         }
 
-        //SensorEvent maxEvent= repo.findAllByIdst(id))
         SensorEvent maxEvent=repo.findBySensorId(id)
                 .stream()
                 .max(Comparator.comparing(SensorEvent::getSensorValue))
