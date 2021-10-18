@@ -5,39 +5,39 @@ import com.analytics.iot.repository.SensorEventRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class KafkaConsumerServiceTest {
+public class KafkaProducerServiceTest {
 
-    private KafkaConsumerService service;
+    private KafkaProducerService service;
 
     @MockBean
-    private SensorEventRepository sensorEventRepository;
+    private  KafkaTemplate<String, SensorEvent> kafkaTemplate;
 
     @Before
     public void init() {
         MockitoAnnotations.initMocks(this);
-        service = new KafkaConsumerService(sensorEventRepository);
+        service = new KafkaProducerService(kafkaTemplate);
     }
 
 
     @Test
-    public void testKafkaConsumer(){
+    public void testKafkaProducer(){
         SensorEvent event = new SensorEvent(1L, 1, new BigDecimal(10), OffsetDateTime.now(),
                 "Thermister" , "TH1", 1 );
-        Mockito.when(sensorEventRepository.save(event)).thenReturn(event);
-        service.consume(event);
-        verify(sensorEventRepository, times(1)).save(event);
+        service.sendMessage(event);
+        verify(kafkaTemplate, times(1)).send("iot-data",event);
     }
 
 }

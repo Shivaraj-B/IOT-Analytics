@@ -2,61 +2,100 @@ package com.analytics.iot.service;
 
 import com.analytics.iot.model.SensorEvent;
 import com.analytics.iot.repository.SensorEventRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+import static org.mockito.Mockito.when;
+
+@RunWith(SpringJUnit4ClassRunner.class)
 public class SensorEventServiceTest {
 
-    @InjectMocks
-    private SensorEventService sensorEventService = new SensorEventService();
-    @Mock
+    @MockBean
     private SensorEventRepository sensorEventRepository;
+
+    private SensorEventService sensorEventService;
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        
+        sensorEventService = new SensorEventService(sensorEventRepository);
+        when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
+    }
 
     @Test
     public void testGetAverageDataForSensor(){
-        Mockito.when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
+       // when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
         BigDecimal result = sensorEventService.getAverageDataForSensor(1);
-        Assertions.assertEquals(new BigDecimal(20), result);
+        Assert.assertEquals(new BigDecimal(20), result);
     }
 
     @Test
     public void testGetMedianDataForSensorWithOddData(){
-        Mockito.when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
+       //when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
         BigDecimal result = sensorEventService.getMedianDataForSensor(1);
-        Assertions.assertEquals(new BigDecimal(20), result);
+        Assert.assertEquals(new BigDecimal(20), result);
     }
 
     @Test
     public void testGetMedianDataForSensorWithEvenData(){
-        Mockito.when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventDataWithEvenData());
+        when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventDataWithEvenData());
         BigDecimal result = sensorEventService.getMedianDataForSensor(1);
-        Assertions.assertEquals(new BigDecimal(25), result);
+        Assert.assertEquals(new BigDecimal(25), result);
     }
+
 
     @Test
     public void testGetMinDataForSensor(){
-        Mockito.when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
+        //when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
         BigDecimal result = sensorEventService.getMinDataForSensor(1);
-        Assertions.assertEquals(new BigDecimal(10), result);
+        Assert.assertEquals(new BigDecimal(10), result);
     }
 
 
     @Test
     public void testGetMaxDataForSensor(){
-        Mockito.when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
+        //when(sensorEventRepository.findBySensorId(1)).thenReturn(getSensorEventData());
         BigDecimal result = sensorEventService.getMaxDataForSensor(1);
-        Assertions.assertEquals(new BigDecimal(30), result);
+        Assert.assertEquals(new BigDecimal(30), result);
+    }
+
+    @Test
+    public void testGetMedianDataForSensorWithNull(){
+        when(sensorEventRepository.findBySensorId(1)).thenReturn(null);
+        BigDecimal result = sensorEventService.getMedianDataForSensor(1);
+        Assert.assertNull(result);
+    }
+
+    @Test
+    public void testGetAverageDataForSensorWithNull(){
+        when(sensorEventRepository.findBySensorId(1)).thenReturn(null);
+        BigDecimal result = sensorEventService.getAverageDataForSensor(1);
+        Assert.assertNull(result);
+    }
+
+    @Test
+    public void testGetMinDataForSensorWithNull(){
+        when(sensorEventRepository.findBySensorId(1)).thenReturn(null);
+        BigDecimal result = sensorEventService.getMinDataForSensor(1);
+        Assert.assertNull(result);
+    }
+
+    @Test
+    public void testGetMaxDataForSensorWithNull(){
+        when(sensorEventRepository.findBySensorId(1)).thenReturn(null);
+        BigDecimal result = sensorEventService.getMaxDataForSensor(1);
+        Assert.assertNull(result);
     }
 
     public List<SensorEvent> getSensorEventData() {

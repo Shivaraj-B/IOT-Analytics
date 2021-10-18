@@ -1,22 +1,26 @@
 package com.analytics.iot.config;
 
 import com.analytics.iot.model.SensorEvent;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-@ExtendWith(MockitoExtension.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class CustomSerializerTest {
 
-    @InjectMocks
-    private CustomSerializer customSerializer = new CustomSerializer();
+    private CustomSerializer customSerializer;
+
+    @Before
+    public void init() {
+        customSerializer = new CustomSerializer();
+    }
 
     @Test
     public void testSerialize() throws UnsupportedEncodingException {
@@ -27,7 +31,7 @@ public class CustomSerializerTest {
 
         String stringResult = new String(result, "UTF-8");
         System.out.println(stringResult);
-        Assertions.assertEquals(expectedResult,stringResult );
+        Assert.assertEquals(expectedResult,stringResult );
 
     }
 }

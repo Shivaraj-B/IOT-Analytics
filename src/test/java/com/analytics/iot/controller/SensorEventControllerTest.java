@@ -2,14 +2,15 @@ package com.analytics.iot.controller;
 
 import com.analytics.iot.service.SensorEventService;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -17,23 +18,29 @@ import java.math.BigDecimal;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-@ExtendWith(SpringExtension.class)
+
+@RunWith(SpringJUnit4ClassRunner.class)
 @WebMvcTest(SensorEventController.class)
+@AutoConfigureMockMvc
 public class SensorEventControllerTest {
 
     @MockBean
-    SensorEventService service;
+    private SensorEventService service;
 
-    @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-    @InjectMocks
-    SensorEventController controller = new SensorEventController(service);
+
+    @Before
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        mockMvc = standaloneSetup(new SensorEventController(service)).build();
+    }
 
     @Test
     public void testGetSensorAverageData() throws Exception {
-        Mockito.when(service. getAverageDataForSensor(1)).thenReturn(new BigDecimal(20));
+        Mockito.when(service.getAverageDataForSensor(1)).thenReturn(new BigDecimal(20));
 
         mockMvc.perform(get("/sensor/1/average"))
                 .andExpect(status().isOk())
@@ -42,7 +49,7 @@ public class SensorEventControllerTest {
 
     @Test
     public void testGetSensorAverageDataWithNull() throws Exception {
-        Mockito.when(service. getAverageDataForSensor(1)).thenReturn(null);
+        Mockito.when(service.getAverageDataForSensor(1)).thenReturn(null);
 
         mockMvc.perform(get("/sensor/1/average"))
                 .andExpect(status().isNoContent());

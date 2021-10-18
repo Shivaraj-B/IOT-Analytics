@@ -11,8 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 public final class KafkaConsumerService {
 
-    @Autowired
     private SensorEventRepository repo;
+
+    @Autowired
+    public KafkaConsumerService(SensorEventRepository repo) {
+        this.repo = repo;
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerService.class);
 
     @KafkaListener(topics = "iot-data", groupId = "group_id" )

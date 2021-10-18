@@ -17,8 +17,13 @@ import java.util.stream.Collectors;
 @Service
 public  class SensorEventService {
 
-    @Autowired
     private SensorEventRepository repo;
+
+    @Autowired
+    public SensorEventService(SensorEventRepository repo) {
+        this.repo = repo;
+    }
+
     private static final Logger logger = LoggerFactory.getLogger(SensorEventService.class);
 
     public BigDecimal getAverageDataForSensor(long id) {
